@@ -24,6 +24,10 @@ public class Main extends SimpleApplication {
     public Spatial ob;
     public Node tierraNode = new Node("Tierra");
     public Node solNode = new Node("Sol");
+    public Node mercurioNode = new Node("Mercurio");
+    public Node venusNode = new Node("Venus");
+    public Node marteNode = new Node("Marte");
+    public Node jupiterNode = new Node("Jupiter");
     
     public static final Quaternion PITCH090 = new Quaternion().fromAngleAxis(
             FastMath.PI / 2,
@@ -48,39 +52,74 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         flyCam.setMoveSpeed(10f);
         
-        Sphere s = new Sphere(10, 100, 0.3f);
-        Sphere s2 = new Sphere(10, 100, 3f);
+        Sphere s = new Sphere(100, 100, 0.6f);
+        Sphere s2 = new Sphere(10, 100, 10f);
+        Sphere s3 = new Sphere(100, 100, 0.3f);
+        Sphere s4 = new Sphere(100, 100, 0.5f);
+        Sphere s5 = new Sphere(100, 100, 0.4f);
+        Sphere s6 = new Sphere(100, 100, 4f);
         
         Geometry geom = new Geometry("Tierra", s);
         Geometry geom2 = new Geometry("Sol", s2);
+        Geometry geom3 = new Geometry("Mercurio", s3);
+        Geometry geom4 = new Geometry("Venus", s4);
+        Geometry geom5 = new Geometry("Marte", s5);
+        Geometry geom6 = new Geometry("Jupiter", s6);
         
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
+        mat.setTexture("ColorMap", assetManager.loadTexture("Textures/planeta_tierra.jpg"));
         
         Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.Yellow);
+        mat2.setTexture("ColorMap", assetManager.loadTexture("Textures/sol.jpg"));
+        
+        Material mat3 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat3.setTexture("ColorMap", assetManager.loadTexture("Textures/mercurio.jpg"));
+        
+        Material mat4 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat4.setTexture("ColorMap", assetManager.loadTexture("Textures/venus.jpg"));
+        
+        Material mat5 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat5.setTexture("ColorMap", assetManager.loadTexture("Textures/marte.jpg"));
+        
+        Material mat6 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat6.setTexture("ColorMap", assetManager.loadTexture("Textures/jupiter.jpg"));
         
         geom.setMaterial(mat);
         geom2.setMaterial(mat2);
+        geom3.setMaterial(mat3);
+        geom4.setMaterial(mat4);
+        geom5.setMaterial(mat5);
+        geom6.setMaterial(mat6);
         
-        geom.move(4, 0, 0);
+        geom3.move(12, 0, 0);
+        geom4.move(18, 0, 0);
+        geom.move(24, 0, 0);
+        geom5.move(30, 0, 0);
+        geom6.move(40, 0, 0);
         
         tierraNode.attachChild(geom);
+        mercurioNode.attachChild(geom3);
+        venusNode.attachChild(geom4);
+        marteNode.attachChild(geom5);
+        jupiterNode.attachChild(geom6);
+        
         solNode.attachChild(geom2);
         solNode.attachChild(tierraNode);
+        solNode.attachChild(mercurioNode);
+        solNode.attachChild(venusNode);
+        solNode.attachChild(marteNode);
+        solNode.attachChild(jupiterNode);
         
-        solNode.rotate(0, 0, 45f);
-        //solNode.rotate(new Quaternion(0, 0, FastMath.PI / 4, 1));
-        geom.rotate(0, 0, -45f);
-        geom2.rotate(0, 0, -45f);
+        geom.rotate(FastMath.PI * 1.5f, 0, 0);
+        geom2.rotate(FastMath.PI * 1.5f, 0, 0);
+        geom3.rotate(FastMath.PI * 1.5f, 0, 0);
+        geom4.rotate(FastMath.PI * 1.5f, 0, 0);
+        geom5.rotate(FastMath.PI * 1.5f, 0, 0);
+        geom6.rotate(FastMath.PI * 1.5f, 0, 0);
         
         //Se cambia la ubicación de la cámara para dar la perspectiva que requiere
         cam.setLocation(new Vector3f(0, 40, 15));
         cam.setRotation(PITCH090);
-        
-        Node playerNode = new Node("PlayerNode");
-        Node towerNode = new Node("TowerNode");
-        Node creepNode = new Node("CreepNode");
         
         rootNode.attachChild(solNode);
     }
@@ -94,10 +133,20 @@ public class Main extends SimpleApplication {
         }
         else
         {
-            ob.rotate(0, tpf, 0);
+            ob.rotate(0, tpf / 4, 0);
         }
         
-        tierraNode.rotate(0, tpf, 0);
+        mercurioNode.rotate(0, tpf, 0);
+        venusNode.rotate(0, tpf * 0.8f, 0);
+        tierraNode.rotate(0, tpf * 0.6f, 0);
+        marteNode.rotate(0, tpf / 2, 0);
+        jupiterNode.rotate(0, tpf / 3, 0);
+        
+        mercurioNode.getChild("Mercurio").rotate(0, 0, tpf * 4);
+        venusNode.getChild("Venus").rotate(0, 0, tpf);
+        tierraNode.getChild("Tierra").rotate(0, 0, tpf * 3);
+        marteNode.getChild("Marte").rotate(0, 0, tpf * 2);
+        jupiterNode.getChild("Jupiter").rotate(0, 0, tpf * 6);
     }
 
     @Override
