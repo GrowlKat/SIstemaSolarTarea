@@ -21,6 +21,7 @@ import com.jme3.system.AppSettings;
  */
 public class Main extends SimpleApplication {
 
+    // Declaración de Nodos
     public Spatial ob;
     public Node tierraNode = new Node("Tierra");
     public Node solNode = new Node("Sol");
@@ -29,6 +30,7 @@ public class Main extends SimpleApplication {
     public Node marteNode = new Node("Marte");
     public Node jupiterNode = new Node("Jupiter");
     
+    // Constante para ver el escenario desde arriba
     public static final Quaternion PITCH090 = new Quaternion().fromAngleAxis(
             FastMath.PI / 2,
             new Vector3f(1, 0, 0));
@@ -52,6 +54,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         flyCam.setMoveSpeed(10f);
         
+        // Declaración de los modelos de los planetas
         Sphere s = new Sphere(100, 100, 0.6f);
         Sphere s2 = new Sphere(10, 100, 10f);
         Sphere s3 = new Sphere(100, 100, 0.3f);
@@ -59,6 +62,7 @@ public class Main extends SimpleApplication {
         Sphere s5 = new Sphere(100, 100, 0.4f);
         Sphere s6 = new Sphere(100, 100, 4f);
         
+        // Declaración de los Geometry
         Geometry geom = new Geometry("Tierra", s);
         Geometry geom2 = new Geometry("Sol", s2);
         Geometry geom3 = new Geometry("Mercurio", s3);
@@ -66,6 +70,7 @@ public class Main extends SimpleApplication {
         Geometry geom5 = new Geometry("Marte", s5);
         Geometry geom6 = new Geometry("Jupiter", s6);
         
+        // Declaración de los Materiales de cada planeta
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setTexture("ColorMap", assetManager.loadTexture("Textures/planeta_tierra.jpg"));
         
@@ -84,6 +89,7 @@ public class Main extends SimpleApplication {
         Material mat6 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat6.setTexture("ColorMap", assetManager.loadTexture("Textures/jupiter.jpg"));
         
+        // Establece el material de cada planeta
         geom.setMaterial(mat);
         geom2.setMaterial(mat2);
         geom3.setMaterial(mat3);
@@ -91,18 +97,22 @@ public class Main extends SimpleApplication {
         geom5.setMaterial(mat5);
         geom6.setMaterial(mat6);
         
+        // Mueve los planetas a su respectiva posición
         geom3.move(12, 0, 0);
         geom4.move(18, 0, 0);
         geom.move(24, 0, 0);
         geom5.move(30, 0, 0);
         geom6.move(40, 0, 0);
         
+        // Agrega los planetas a su respectivo nodo
         tierraNode.attachChild(geom);
         mercurioNode.attachChild(geom3);
         venusNode.attachChild(geom4);
         marteNode.attachChild(geom5);
         jupiterNode.attachChild(geom6);
         
+        // Agrega el sol al nodo del mismo nombre, y a este mismo se le agregan
+        // el resto de nodos
         solNode.attachChild(geom2);
         solNode.attachChild(tierraNode);
         solNode.attachChild(mercurioNode);
@@ -110,6 +120,8 @@ public class Main extends SimpleApplication {
         solNode.attachChild(marteNode);
         solNode.attachChild(jupiterNode);
         
+        // Rota los planetas para que se vean verticalmente correctos con la
+        // textura
         geom.rotate(FastMath.PI * 1.5f, 0, 0);
         geom2.rotate(FastMath.PI * 1.5f, 0, 0);
         geom3.rotate(FastMath.PI * 1.5f, 0, 0);
@@ -121,27 +133,34 @@ public class Main extends SimpleApplication {
         cam.setLocation(new Vector3f(0, 40, 15));
         cam.setRotation(PITCH090);
         
+        // Agrega el sol al Root Node
         rootNode.attachChild(solNode);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+        // Si el objeto ob es nulo, establece su valor al nodo del sol
         if(ob == null)
         {
             System.out.println("No está asignado un objeto");
             ob = rootNode.getChild("Sol");
         }
+        // Si no, rota el nodo verticalmente
         else
         {
             ob.rotate(0, tpf / 4, 0);
         }
         
+        // Rota cada planeta alrededor del sol
         mercurioNode.rotate(0, tpf, 0);
         venusNode.rotate(0, tpf * 0.8f, 0);
         tierraNode.rotate(0, tpf * 0.6f, 0);
         marteNode.rotate(0, tpf / 2, 0);
         jupiterNode.rotate(0, tpf / 3, 0);
         
+        // Los objetos de cada nodo giran sobre su eje vertical (Recordemos que
+        // están rotados, por lo que para que roten verticalmente debe de ser
+        // rotado el eje Z y no el Y)
         mercurioNode.getChild("Mercurio").rotate(0, 0, tpf * 4);
         venusNode.getChild("Venus").rotate(0, 0, tpf);
         tierraNode.getChild("Tierra").rotate(0, 0, tpf * 3);
